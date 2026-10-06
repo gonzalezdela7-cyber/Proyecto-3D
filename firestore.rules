@@ -1,0 +1,293 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened Global Helpers
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation Blueprint for Estimate
+    function isValidEstimate(data) {
+      return data.keys().hasAll([
+        'ownerId',
+        'referenceCode',
+        'timestamp',
+        'lastModifiedAt',
+        'lastLoadedAt',
+        'modificationCount',
+        'loadCount',
+        'nombre',
+        'empresa',
+        'email',
+        'telefono',
+        'servicioLabel',
+        'servicioValue',
+        'cantidad',
+        'materialLabel',
+        'materialValue',
+        'complejidadLabel',
+        'complejidadValue',
+        'plazoLabel',
+        'plazoValue',
+        'volumeCm3',
+        'factorTamano',
+        'dimensionsSummary',
+        'observaciones',
+        'fileName',
+        'unitPrice',
+        'totalPrice',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'ownerId',
+        'referenceCode',
+        'timestamp',
+        'lastModifiedAt',
+        'lastLoadedAt',
+        'modificationCount',
+        'loadCount',
+        'nombre',
+        'empresa',
+        'email',
+        'telefono',
+        'servicioLabel',
+        'servicioValue',
+        'cantidad',
+        'materialLabel',
+        'materialValue',
+        'complejidadLabel',
+        'complejidadValue',
+        'plazoLabel',
+        'plazoValue',
+        'volumeCm3',
+        'factorTamano',
+        'dimensionsSummary',
+        'observaciones',
+        'fileName',
+        'unitPrice',
+        'totalPrice',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.ownerId == request.auth.uid &&
+      isValidId(data.ownerId) &&
+      data.referenceCode is string &&
+      data.referenceCode.size() >= 4 &&
+      data.referenceCode.size() <= 20 &&
+      data.referenceCode.matches('^P3D-[0-9]{4,8}$') &&
+      data.timestamp is string &&
+      data.timestamp.size() >= 1 &&
+      data.timestamp.size() <= 40 &&
+      data.lastModifiedAt is string &&
+      data.lastModifiedAt.size() >= 1 &&
+      data.lastModifiedAt.size() <= 40 &&
+      data.lastLoadedAt is string &&
+      data.lastLoadedAt.size() <= 40 &&
+      data.modificationCount is int &&
+      data.modificationCount >= 0 &&
+      data.modificationCount <= 10000 &&
+      data.loadCount is int &&
+      data.loadCount >= 0 &&
+      data.loadCount <= 10000 &&
+      data.nombre is string &&
+      data.nombre.size() >= 1 &&
+      data.nombre.size() <= 100 &&
+      data.empresa is string &&
+      data.empresa.size() >= 1 &&
+      data.empresa.size() <= 120 &&
+      data.email is string &&
+      data.email.size() >= 3 &&
+      data.email.size() <= 150 &&
+      data.telefono is string &&
+      data.telefono.size() >= 1 &&
+      data.telefono.size() <= 30 &&
+      data.servicioLabel is string &&
+      data.servicioLabel.size() >= 1 &&
+      data.servicioLabel.size() <= 60 &&
+      data.servicioValue is number &&
+      data.servicioValue >= 0.5 &&
+      data.servicioValue <= 5.0 &&
+      data.cantidad is int &&
+      data.cantidad >= 1 &&
+      data.cantidad <= 10000 &&
+      data.materialLabel is string &&
+      data.materialLabel.size() >= 1 &&
+      data.materialLabel.size() <= 80 &&
+      data.materialValue is number &&
+      data.materialValue >= 0.5 &&
+      data.materialValue <= 5.0 &&
+      data.complejidadLabel is string &&
+      data.complejidadLabel.size() >= 1 &&
+      data.complejidadLabel.size() <= 30 &&
+      data.complejidadValue is number &&
+      data.complejidadValue >= 0.5 &&
+      data.complejidadValue <= 5.0 &&
+      data.plazoLabel is string &&
+      data.plazoLabel.size() >= 1 &&
+      data.plazoLabel.size() <= 40 &&
+      data.plazoValue is number &&
+      data.plazoValue >= 0.5 &&
+      data.plazoValue <= 5.0 &&
+      data.volumeCm3 is number &&
+      data.volumeCm3 >= 0 &&
+      data.volumeCm3 <= 1000000 &&
+      data.factorTamano is number &&
+      data.factorTamano >= 1.0 &&
+      data.factorTamano <= 200000 &&
+      data.dimensionsSummary is string &&
+      data.dimensionsSummary.size() >= 1 &&
+      data.dimensionsSummary.size() <= 120 &&
+      data.observaciones is string &&
+      data.observaciones.size() >= 1 &&
+      data.observaciones.size() <= 1000 &&
+      data.fileName is string &&
+      data.fileName.size() >= 1 &&
+      data.fileName.size() <= 150 &&
+      data.unitPrice is number &&
+      data.unitPrice >= 0 &&
+      data.unitPrice <= 10000000 &&
+      data.totalPrice is number &&
+      data.totalPrice >= 0 &&
+      data.totalPrice <= 100000000 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    // Validation Blueprint for EstimateHistoryEvent
+    function isValidEstimateHistoryEvent(data) {
+      return data.keys().hasAll([
+        'ownerId',
+        'estimateId',
+        'referenceCode',
+        'action',
+        'actionLabel',
+        'timestamp',
+        'summary',
+        'createdAt'
+      ]) &&
+      data.keys().hasOnly([
+        'ownerId',
+        'estimateId',
+        'referenceCode',
+        'action',
+        'actionLabel',
+        'timestamp',
+        'summary',
+        'createdAt'
+      ]) &&
+      data.ownerId == request.auth.uid &&
+      isValidId(data.ownerId) &&
+      isValidId(data.estimateId) &&
+      data.referenceCode is string &&
+      data.referenceCode.size() >= 4 &&
+      data.referenceCode.size() <= 20 &&
+      data.referenceCode.matches('^P3D-[0-9]{4,8}$') &&
+      data.action is string &&
+      data.action.size() >= 6 &&
+      data.action.size() <= 16 &&
+      data.action in ['created', 'modified', 'loaded', 'deleted'] &&
+      data.actionLabel is string &&
+      data.actionLabel.size() >= 1 &&
+      data.actionLabel.size() <= 60 &&
+      data.timestamp is string &&
+      data.timestamp.size() >= 1 &&
+      data.timestamp.size() <= 40 &&
+      data.summary is string &&
+      data.summary.size() >= 1 &&
+      data.summary.size() <= 300 &&
+      data.createdAt is timestamp;
+    }
+
+    // Collection: /estimates/{estimateId}
+    match /estimates/{estimateId} {
+      allow get: if isSignedIn() && isValidId(estimateId) && existing().ownerId == request.auth.uid;
+      allow list: if isSignedIn() && existing().ownerId == request.auth.uid;
+
+      allow create: if isSignedIn() &&
+        isValidId(estimateId) &&
+        isValidEstimate(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(estimateId) &&
+        isValidEstimate(incoming()) &&
+        existing().ownerId == request.auth.uid &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().referenceCode == existing().referenceCode &&
+        incoming().timestamp == existing().timestamp &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          // Action 1: Record Load in Calculator
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'lastLoadedAt',
+            'loadCount',
+            'updatedAt'
+          ]) ||
+          // Action 2: Modify Estimate Parameters
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'lastModifiedAt',
+            'modificationCount',
+            'nombre',
+            'empresa',
+            'email',
+            'telefono',
+            'servicioLabel',
+            'servicioValue',
+            'cantidad',
+            'materialLabel',
+            'materialValue',
+            'complejidadLabel',
+            'complejidadValue',
+            'plazoLabel',
+            'plazoValue',
+            'volumeCm3',
+            'factorTamano',
+            'dimensionsSummary',
+            'observaciones',
+            'fileName',
+            'unitPrice',
+            'totalPrice',
+            'updatedAt'
+          ])
+        );
+
+      allow delete: if isSignedIn() && isValidId(estimateId) && existing().ownerId == request.auth.uid;
+    }
+
+    // Collection: /estimateHistory/{historyId}
+    match /estimateHistory/{historyId} {
+      allow get: if isSignedIn() && isValidId(historyId) && existing().ownerId == request.auth.uid;
+      allow list: if isSignedIn() && existing().ownerId == request.auth.uid;
+
+      allow create: if isSignedIn() &&
+        isValidId(historyId) &&
+        isValidEstimateHistoryEvent(incoming()) &&
+        incoming().createdAt == request.time;
+
+      allow update: if false;
+
+      allow delete: if isSignedIn() && isValidId(historyId) && existing().ownerId == request.auth.uid;
+    }
+  }
+}

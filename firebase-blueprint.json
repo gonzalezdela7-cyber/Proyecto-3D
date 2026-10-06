@@ -1,0 +1,277 @@
+{
+  "entities": {
+    "Estimate": {
+      "title": "Estimate",
+      "description": "Configuración de presupuesto orientativo 3D guardada por un usuario autenticado.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "UID del usuario propietario autenticado en Firebase Auth.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "referenceCode": {
+          "type": "string",
+          "description": "Código de referencia único del presupuesto (ej. P3D-8041).",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^P3D-[0-9]{4,8}$"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Etiqueta legible de fecha/hora de creación.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "description": "Etiqueta legible de última modificación.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "lastLoadedAt": {
+          "type": "string",
+          "description": "Etiqueta legible de última carga en la calculadora (vacío si no se ha cargado).",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "modificationCount": {
+          "type": "number",
+          "description": "Número de veces que la configuración ha sido modificada."
+        },
+        "loadCount": {
+          "type": "number",
+          "description": "Número de veces que la configuración ha sido cargada en la calculadora."
+        },
+        "nombre": {
+          "type": "string",
+          "description": "Nombre del solicitante.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "empresa": {
+          "type": "string",
+          "description": "Empresa del solicitante.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Correo electrónico del solicitante.",
+          "minLength": 3,
+          "maxLength": 150
+        },
+        "telefono": {
+          "type": "string",
+          "description": "Teléfono de contacto del solicitante.",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "servicioLabel": {
+          "type": "string",
+          "description": "Nombre del servicio 3D seleccionado.",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "servicioValue": {
+          "type": "number",
+          "description": "Multiplicador numérico del servicio seleccionado."
+        },
+        "cantidad": {
+          "type": "number",
+          "description": "Cantidad de unidades solicitadas (1 a 10000)."
+        },
+        "materialLabel": {
+          "type": "string",
+          "description": "Nombre del material seleccionado.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "materialValue": {
+          "type": "number",
+          "description": "Multiplicador numérico del material."
+        },
+        "complejidadLabel": {
+          "type": "string",
+          "description": "Nivel de complejidad seleccionado.",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "complejidadValue": {
+          "type": "number",
+          "description": "Multiplicador numérico de complejidad."
+        },
+        "plazoLabel": {
+          "type": "string",
+          "description": "Etiqueta del plazo deseado.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "plazoValue": {
+          "type": "number",
+          "description": "Multiplicador numérico del plazo."
+        },
+        "volumeCm3": {
+          "type": "number",
+          "description": "Volumen envolvente calculado en cm³."
+        },
+        "factorTamano": {
+          "type": "number",
+          "description": "Factor volumétrico aplicado al cálculo."
+        },
+        "dimensionsSummary": {
+          "type": "string",
+          "description": "Resumen textual de las dimensiones de la pieza.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "observaciones": {
+          "type": "string",
+          "description": "Observaciones técnicas del proyecto.",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Nombre del archivo STL asociado.",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Precio unitario orientativo en euros."
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "Precio total orientativo en euros."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de servidor de creación del documento."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de servidor de última actualización del documento."
+        }
+      },
+      "required": [
+        "ownerId",
+        "referenceCode",
+        "timestamp",
+        "lastModifiedAt",
+        "lastLoadedAt",
+        "modificationCount",
+        "loadCount",
+        "nombre",
+        "empresa",
+        "email",
+        "telefono",
+        "servicioLabel",
+        "servicioValue",
+        "cantidad",
+        "materialLabel",
+        "materialValue",
+        "complejidadLabel",
+        "complejidadValue",
+        "plazoLabel",
+        "plazoValue",
+        "volumeCm3",
+        "factorTamano",
+        "dimensionsSummary",
+        "observaciones",
+        "fileName",
+        "unitPrice",
+        "totalPrice",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "EstimateHistoryEvent": {
+      "title": "EstimateHistoryEvent",
+      "description": "Evento del historial de cambios y cargas de una configuración de presupuesto.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "UID del usuario propietario del evento.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "estimateId": {
+          "type": "string",
+          "description": "ID del presupuesto asociado.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "referenceCode": {
+          "type": "string",
+          "description": "Código de referencia del presupuesto (ej. P3D-8041).",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^P3D-[0-9]{4,8}$"
+        },
+        "action": {
+          "type": "string",
+          "description": "Tipo de acción realizada.",
+          "enum": ["created", "modified", "loaded", "deleted"],
+          "minLength": 6,
+          "maxLength": 16
+        },
+        "actionLabel": {
+          "type": "string",
+          "description": "Etiqueta descriptiva de la acción.",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Hora legible del evento.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "summary": {
+          "type": "string",
+          "description": "Resumen técnico de los cambios o parámetros cargados.",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de servidor en el momento de registrar el evento."
+        }
+      },
+      "required": [
+        "ownerId",
+        "estimateId",
+        "referenceCode",
+        "action",
+        "actionLabel",
+        "timestamp",
+        "summary",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/estimates/{estimateId}": {
+      "schema": {
+        "$ref": "#/entities/Estimate"
+      },
+      "description": "Colección de estimaciones orientativas 3D guardadas por cada usuario autenticado."
+    },
+    "/estimateHistory/{historyId}": {
+      "schema": {
+        "$ref": "#/entities/EstimateHistoryEvent"
+      },
+      "description": "Colección de eventos del historial de modificaciones y cargas por usuario."
+    }
+  }
+}
